@@ -343,7 +343,7 @@ npm install
 npm run dev
 
 # Step 5: Open browser
-# Visit: http://localhost:3000
+# Visit: http://localhost:3000 and deploy URL: https://taskmanagementapp-theta.vercel.app/
 ```
 
 ### **Firebase Configuration** 
@@ -364,7 +364,7 @@ NEXT_PUBLIC_FIREBASE_APP_ID=
 
 #### Step 1: Create Account
 ```
-1. Go to http://localhost:3000
+1. Go to http://localhost:3000 or deploy URL: https://taskmanagementapp-theta.vercel.app/
 2. Click "Sign Up"
 3. Enter: Full Name, Email, Password (6+ chars)
 4. Click "Create Account"
@@ -542,7 +542,7 @@ Effect:   Backgrop blur for glassmorphism
 
 **Project Details:**
 - Firebase Project: `taskmanagementwebappbyrahul`
-- Frontend URL: `http://localhost:3000`
+- Frontend URL: `http://localhost:3000` or and deploy URL: `https://taskmanagementapp-theta.vercel.app/`
 - Config File: `frontend/.env.local`
 
 **Useful Links:**

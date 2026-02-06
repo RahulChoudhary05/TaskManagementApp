@@ -117,7 +117,7 @@ goto end
 :run_frontend
 echo.
 echo Starting Frontend Server...
-echo URL: http://localhost:3000
+echo URL: http://localhost:3000 and deployed URL: https://taskmanagementapp-theta.vercel.app/
 echo.
 echo Press Ctrl+C to stop the server
 echo.
@@ -130,7 +130,7 @@ echo.
 echo Starting BOTH servers...
 echo.
 echo Backend: http://localhost:5000
-echo Frontend: http://localhost:3000 (or 3001)
+echo Frontend: http://localhost:3000 (or 3001) and deployed URL: https://taskmanagementapp-theta.vercel.app/
 echo.
 echo Press Ctrl+C in each terminal to stop the server
 echo.
