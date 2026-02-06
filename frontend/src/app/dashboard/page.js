@@ -39,6 +39,8 @@ function DashboardContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState(null);
   const [formLoading, setFormLoading] = useState(false);
+  const [deleteModal, setDeleteModal] = useState({ isOpen: false, taskId: null, taskTitle: '' });
+  const [successMessage, setSuccessMessage] = useState('');
 
   // Fetch tasks on mount and when filters change
   useEffect(() => {
@@ -46,6 +48,16 @@ function DashboardContent() {
       fetchTasks(filters);
     }
   }, [user?.uid, filters]);
+
+  // Auto-hide success message after 3 seconds
+  useEffect(() => {
+    if (successMessage) {
+      const timer = setTimeout(() => {
+        setSuccessMessage('');
+      }, 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [successMessage]);
 
   // Handle create/edit task
   const handleSubmit = async (formData) => {
@@ -72,9 +84,29 @@ function DashboardContent() {
     setIsModalOpen(true);
   };
 
-  // Handle delete
-  const handleDelete = async (taskId) => {
-    await removeTask(taskId);
+  // Open delete confirmation modal
+  const handleDeleteClick = (task) => {
+    setDeleteModal({ 
+      isOpen: true, 
+      taskId: task.id, 
+      taskTitle: task.title 
+    });
+  };
+
+  // Confirm delete
+  const confirmDelete = async () => {
+    if (!deleteModal.taskId) return;
+    
+    const result = await removeTask(deleteModal.taskId);
+    if (result.success) {
+      setSuccessMessage('Task deleted successfully!');
+      setDeleteModal({ isOpen: false, taskId: null, taskTitle: '' });
+    }
+  };
+
+  // Cancel delete
+  const cancelDelete = () => {
+    setDeleteModal({ isOpen: false, taskId: null, taskTitle: '' });
   };
 
   // Handle status change
@@ -192,6 +224,16 @@ function DashboardContent() {
           </div>
         )}
 
+        {/* Success Message */}
+        {successMessage && (
+          <div className="bg-green-50 border-2 border-green-300 text-green-700 px-6 py-4 rounded-xl mb-6 flex items-start gap-3 shadow-lg animate-fade-in">
+            <svg className="w-6 h-6 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            <span className="font-semibold">{successMessage}</span>
+          </div>
+        )}
+
         {/* Filters */}
         <div className="mb-8">
           <TaskFilters 
@@ -205,7 +247,7 @@ function DashboardContent() {
         <TaskList
           tasks={sortedTasks}
           onEdit={handleEdit}
-          onDelete={handleDelete}
+          onDelete={handleDeleteClick}
           onStatusChange={handleStatusChange}
           loading={loading}
         />
@@ -221,6 +263,50 @@ function DashboardContent() {
           onCancel={closeModal}
           loading={formLoading}
         />
+      </Modal>
+
+      {/* Delete Confirmation Modal */}
+      <Modal
+        isOpen={deleteModal.isOpen}
+        onClose={cancelDelete}
+        title="Delete Task"
+      >
+        <div className="space-y-6">
+          <div className="flex items-start gap-4">
+            <div className="flex-shrink-0 w-12 h-12 rounded-full bg-red-100 flex items-center justify-center">
+              <svg className="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+                Are you sure you want to delete this task?
+              </h3>
+              <p className="text-gray-600 mb-3">
+                <span className="font-medium text-gray-900">"{deleteModal.taskTitle}"</span>
+              </p>
+              <p className="text-sm text-gray-500">
+                This action cannot be undone. The task will be permanently deleted.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex gap-3 justify-end">
+            <button
+              onClick={cancelDelete}
+              className="px-6 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition-all duration-200 transform hover:scale-105"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={confirmDelete}
+              disabled={loading}
+              className="px-6 py-2.5 bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white rounded-xl font-semibold transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
+            >
+              {loading ? 'Deleting...' : 'Delete Task'}
+            </button>
+          </div>
+        </div>
       </Modal>
       </div>
     </div>

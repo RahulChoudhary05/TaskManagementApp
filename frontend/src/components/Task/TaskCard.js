@@ -5,21 +5,9 @@ import { formatDate, isOverdue, getStatusColor, getStatusLabel } from '@/service
 
 export default function TaskCard({ task, onEdit, onDelete, onStatusChange }) {
   const [isExpanded, setIsExpanded] = useState(false);
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const overdue = isOverdue(task.dueDate);
   const statusColor = getStatusColor(task.status);
-
-  const handleDelete = () => {
-    if (showDeleteConfirm) {
-      onDelete(task.id);
-      setShowDeleteConfirm(false);
-    } else {
-      setShowDeleteConfirm(true);
-      // Auto-hide confirm after 3 seconds
-      setTimeout(() => setShowDeleteConfirm(false), 3000);
-    }
-  };
 
   const handleStatusChange = (e) => {
     onStatusChange(task.id, e.target.value);
@@ -58,13 +46,9 @@ export default function TaskCard({ task, onEdit, onDelete, onStatusChange }) {
               </svg>
             </button>
             <button
-              onClick={handleDelete}
-              className={`p-2.5 rounded-xl transition-all duration-200 transform hover:scale-110 shadow-sm ${
-                showDeleteConfirm 
-                  ? 'text-white bg-gradient-to-r from-red-500 to-pink-600' 
-                  : 'text-red-600 bg-red-50 hover:bg-red-100'
-              }`}
-              title={showDeleteConfirm ? '⚠️ Click again to confirm' : 'Delete task'}
+              onClick={() => onDelete(task)}
+              className="p-2.5 text-red-600 hover:text-red-700 bg-red-50 hover:bg-red-100 rounded-xl transition-all duration-200 transform hover:scale-110 shadow-sm"
+              title="Delete task"
             >
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />

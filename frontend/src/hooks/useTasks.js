@@ -123,6 +123,10 @@ export const useTasks = (userId) => {
    * @param {string} taskId - Task ID
    */
   const removeTask = async (taskId) => {
+    if (!taskId) {
+      return { success: false, message: 'Task ID is required' };
+    }
+    
     setLoading(true);
     setError(null);
     
@@ -130,16 +134,16 @@ export const useTasks = (userId) => {
       const result = await deleteTask(taskId);
       
       if (result.success) {
-        // Remove from local state
         setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
       } else {
-        setError(result.message);
+        setError(result.message || 'Failed to delete task');
       }
       
       return result;
     } catch (err) {
-      setError(err.message || 'Failed to delete task');
-      return { success: false, message: err.message };
+      const errorMsg = err.message || 'Failed to delete task';
+      setError(errorMsg);
+      return { success: false, message: errorMsg };
     } finally {
       setLoading(false);
     }

@@ -171,7 +171,12 @@ export const updateTask = async (taskId, updateData) => {
  */
 export const deleteTask = async (taskId) => {
   try {
-    await deleteDoc(doc(db, TASKS_COLLECTION, taskId));
+    if (!taskId) {
+      throw new Error('Task ID is required');
+    }
+    
+    const taskRef = doc(db, TASKS_COLLECTION, taskId);
+    await deleteDoc(taskRef);
     
     return {
       success: true,
@@ -181,7 +186,7 @@ export const deleteTask = async (taskId) => {
     return {
       success: false,
       error: error.message,
-      message: 'Failed to delete task. Please try again.',
+      message: error.message || 'Failed to delete task. Please try again.',
     };
   }
 };
