@@ -2,7 +2,7 @@
 
 import { auth } from '@/lib/firebase/config';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://taskmanagementapp-jywv.onrender.com/api';
 
 /**
  * Get authorization token from Firebase

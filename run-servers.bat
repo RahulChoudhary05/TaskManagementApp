@@ -106,7 +106,7 @@ goto end
 echo.
 echo Starting Backend Server...
 echo URL: http://localhost:5000
-echo API: http://localhost:5000/api
+echo API: http://localhost:5000/api and deployed URL: https://taskmanagementapp-jywv.onrender.com/api
 echo.
 echo Press Ctrl+C to stop the server
 echo.
